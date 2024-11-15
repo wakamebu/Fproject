@@ -14,7 +14,7 @@ Assets/AssetStoreTools*
 *.pdb
 *.mdb
 
-# Update ZIP files
-update_*.zip
+# Git LFS 管理下の大きなファイルを無視
 resources.*resS
 resources.resource
+update_*.zip
