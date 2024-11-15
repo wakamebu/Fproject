@@ -16,3 +16,5 @@ Assets/AssetStoreTools*
 
 # Update ZIP files
 update_*.zip
+resources.*resS
+resources.resource
