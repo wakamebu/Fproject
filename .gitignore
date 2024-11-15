@@ -13,3 +13,8 @@ Assets/AssetStoreTools*
 *.svd
 *.pdb
 *.mdb
+
+# Git LFS 管理下の大きなファイルを無視
+update_*.zip
+resources.*resS
+resources.resource
