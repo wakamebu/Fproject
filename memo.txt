@@ -1,0 +1,5 @@
+git add .
+git commit -m "Update project to version 1.2.0"
+git push origin main
+
+本体とサーバー両方のVersionいじった？
