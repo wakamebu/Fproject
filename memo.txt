@@ -1,5 +1,5 @@
 git add .
 git commit -m "Update project to version 0.2.0"
-git push origin main
+git push origin master
 
 本体とサーバー両方のVersionいじった？
