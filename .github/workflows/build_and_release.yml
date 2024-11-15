@@ -1,0 +1,82 @@
+name: Build and Release Unity Project
+
+on:
+  push:
+    branches:
+      - main  # 監視するブランチを指定。必要に応じて変更してください。
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64  # ビルドするターゲットプラットフォーム
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git LFS
+        run: git lfs install
+
+      - name: Cache Unity packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.local/share/unity3d/Unity/
+            ~/.local/share/Unity/
+          key: ${{ runner.os }}-unity-packages
+
+      - name: Set up Unity
+        uses: game-ci/unity-setup@v2
+        with:
+          unityVersion: 2022.3.32f1  # 使用しているUnityのバージョンに合わせてください
+          components: ${{ matrix.targetPlatform }}
+
+      - name: Build Unity project
+        uses: game-ci/unity-builder@v2
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: update_0.2.0  # ビルド名をバージョンに合わせて変更
+          versioning: None
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}/update_0.2.0.zip
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Build-StandaloneWindows64
+          path: build
+
+      - name: Create ZIP Archive
+        run: |
+          cd build/StandaloneWindows64
+          zip -r MyUnityGame.zip MyUnityGame
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v0.2.0 #release Version
+          release_name: Build v0.2.0 #release Version
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/update_0.2.0.zip
+          asset_name: Fproject.zip
+          asset_content_type: application/zip
