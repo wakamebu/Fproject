@@ -1,9 +1,11 @@
 cd /D/Fproject/
 git add .
-git commit -m "Update project to version 0.2.1"
+git commit -m "Update project to version 0.3.0 更新機能と編成機能の更新"
 git push origin master
 
 cd "/c/users/wakam/FEO project"
+
+git push origin master --force
 
 本体とサーバー両方のVersionいじった？
 git add . コマンドは、現在のディレクトリ（カレントディレクトリ）とそのサブディレクトリにある全ての新規および変更されたファイルをGitのステージングエリア（インデックス）に追加します
